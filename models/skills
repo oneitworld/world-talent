@@ -1,0 +1,9 @@
+package models
+
+// Skill struct represents the Skills table
+type Skill struct {
+	ID          int    `json:"id"`
+	CandidatoID int    `json:"candidato_id"`
+	Habilidad   string `json:"habilidad"`
+	Nivel       string `json:"nivel"`
+}
