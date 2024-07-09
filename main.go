@@ -22,7 +22,7 @@ func main() {
 		Handler: router,
 	}
 
-	log.Println("HTTP Server READY on Port " + SERVER_PORT)
+	log.Println("AI World Talent | HTTP Server READY on Port " + SERVER_PORT)
 	log.Println(server.ListenAndServe())
 
 }
