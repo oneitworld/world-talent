@@ -103,3 +103,5 @@ CREATE TABLE Resumes (
     fecha_subida DATE,
     FOREIGN KEY (candidato_id) REFERENCES Candidates(id)
 );
+
+
