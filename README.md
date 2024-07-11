@@ -13,6 +13,6 @@ sudo docker images
 ## Instrucciones para correr imagenes Docker
 
 1. sudo docker network create mi-red
-2. sudo docker run -d -p 3307:3306 --name mysql-server --network mi-red -e MYSQL_ROOT_PASSWORD=Kalifornia2024$ -e MY_DATABASE=world mysql:latest
+2. sudo docker run -d -p 3307:3306 --name mysql-server --network mi-red -e MYSQL_ROOT_PASSWORD=Kalifornia2024$ -e MY_DATABASE=sys mysql:latest
 3. sudo docker -d -p 9090:9090 run --network mi-red oneitworld/world-talent-app
 4. sudo docker ps -a
