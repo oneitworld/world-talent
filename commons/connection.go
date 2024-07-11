@@ -9,6 +9,7 @@ import (
 )
 
 func GetConnection() *gorm.DB {
+	// db, error := gorm.Open("mysql", "root:Kalifornia2024$@tcp(mysql-server:3306)/sys?charset=utf8")
 	db, error := gorm.Open("mysql", "root:root@tcp(localhost:3306)/world?charset=utf8")
 
 	if error != nil {
