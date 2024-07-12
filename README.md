@@ -6,9 +6,8 @@ Primera versión de la plataforma de adquisición de talentos con Inteligencia A
 2. AWS EKS (Elastic Kubernetes Service) | Amazon Web Services
 
 ## Instrucciones para construir la imagen Docker
-
-sudo docker build . -t oneitworld/world-talent-app
-sudo docker images
+1. sudo docker build . -t oneitworld/world-talent-app
+2. sudo docker images
 
 ## Instrucciones para correr imagenes Docker
 1. sudo docker volume create mysql-data
