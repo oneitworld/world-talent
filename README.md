@@ -11,8 +11,10 @@ sudo docker build . -t oneitworld/world-talent-app
 sudo docker images
 
 ## Instrucciones para correr imagenes Docker
-
-1. sudo docker network create mi-red
-2. sudo docker run -d -p 3307:3306 --name mysql-server --network mi-red -e MYSQL_ROOT_PASSWORD=Kalifornia2024$ -e MY_DATABASE=sys mysql:latest
-3. sudo docker -d -p 9090:9090 run --network mi-red oneitworld/world-talent-app
-4. sudo docker ps -a
+1. sudo docker volume create mysql-data
+2. sudo docker network create mi-red
+3. sudo docker run -d -p 3307:3306 --name mysql-server --network mi-red -e MYSQL_ROOT_PASSWORD=Kalifornia2024$ -e MY_DATABASE=sys -v mysql-data:/var/lib/mysql mysql:latest
+4. sudo docker run -d -p 9091:9090 --network mi-red oneitworld/world-talent-app
+5. sudo docker ps -a
+6. sudo docker volume ls
+7. sudo docker inspect mysql-server
