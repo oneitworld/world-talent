@@ -12,5 +12,5 @@ func SetPersonaRoutes(router *mux.Router) {
 	subRoute.HandleFunc("/delete", controllers.GetAll).Methods("POST")
 	subRoute.HandleFunc("/find/{id}", controllers.GetByID).Methods("GET")
 	subRoute.HandleFunc("/health", controllers.Health).Methods("GET")
-
+	subRoute.HandleFunc("/upload", controllers.UploadFile).Methods("POST")
 }
