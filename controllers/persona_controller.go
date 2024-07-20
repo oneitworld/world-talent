@@ -99,10 +99,11 @@ func GetByID(writer http.ResponseWriter, request *http.Request) {
 	formattedDateTimeWithZone := time.Now().Format("2006-01-02 15:04:05 MST")
 
 	apiResponseHeader := models.APIResponseHeader{
-		Success:  true,
-		Message:  "Persona Encontrada. ID:" + id,
-		Datetime: formattedDateTimeWithZone,
-		Channel:  "MOBILE",
+		Success:   true,
+		Message:   "Persona Encontrada. ID:" + id,
+		Datetime:  formattedDateTimeWithZone,
+		Channel:   "MOBILE",
+		IPAddress: commons.GetIP(request),
 	}
 
 	apiResponseBody := APIResponseBody{
@@ -142,10 +143,11 @@ func Save(writer http.ResponseWriter, request *http.Request) {
 	formattedDateTimeWithZone := time.Now().Format("2006-01-02 15:04:05 MST")
 
 	apiResponseHeader := models.APIResponseHeader{
-		Success:  true,
-		Message:  "Persona Creada Exitosamente",
-		Datetime: formattedDateTimeWithZone,
-		Channel:  "MOBILE",
+		Success:   true,
+		Message:   "Persona Creada Exitosamente",
+		Datetime:  formattedDateTimeWithZone,
+		Channel:   "MOBILE",
+		IPAddress: commons.GetIP(request),
 	}
 
 	apiResponseBody := APIResponseBody{
