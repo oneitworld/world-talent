@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/oneitworld-demo-crud-api-go/commons"
@@ -15,6 +16,16 @@ import (
 
 type ServiceStatus struct {
 	DBStatus string
+}
+
+type APIResponseBody struct {
+	Header models.APIResponseHeader
+	Data   models.Persona
+}
+
+type APIResponseBodyPersonas struct {
+	Header models.APIResponseHeader
+	Data   []models.Persona
 }
 
 func Health(writer http.ResponseWriter, request *http.Request) {
@@ -45,8 +56,28 @@ func GetAll(writer http.ResponseWriter, request *http.Request) {
 	defer db.Close()
 
 	db.Find(&personas)
-	json, _ := json.Marshal(personas)
-	commons.SendResponse(writer, http.StatusOK, json)
+
+	// Formatear la fecha y hora con zona horaria
+	formattedDateTimeWithZone := time.Now().Format("2006-01-02 15:04:05 MST")
+
+	apiResponseHeader := models.APIResponseHeader{
+		Success:   true,
+		Message:   "Lista de Personas",
+		Datetime:  formattedDateTimeWithZone,
+		Channel:   "MOBILE",
+		IPAddress: commons.GetIP(request),
+	}
+
+	apiResponseBody := APIResponseBodyPersonas{
+		Header: apiResponseHeader,
+		Data:   personas,
+	}
+
+	apiResponseJSON, _ := json.Marshal(apiResponseBody)
+
+	commons.SendResponse(writer, http.StatusOK, apiResponseJSON)
+
+	fmt.Println(commons.GetIP(request))
 }
 
 func GetByID(writer http.ResponseWriter, request *http.Request) {
@@ -59,12 +90,30 @@ func GetByID(writer http.ResponseWriter, request *http.Request) {
 
 	db.Find(&persona, id)
 
-	if persona.ID > 0 {
-		json, _ := json.Marshal(persona)
-		commons.SendResponse(writer, http.StatusOK, json)
-	} else {
+	if persona.ID == 0 {
 		commons.SendError(writer, http.StatusNotFound)
+		return
 	}
+
+	// Formatear la fecha y hora con zona horaria
+	formattedDateTimeWithZone := time.Now().Format("2006-01-02 15:04:05 MST")
+
+	apiResponseHeader := models.APIResponseHeader{
+		Success:  true,
+		Message:  "Persona Encontrada. ID:" + id,
+		Datetime: formattedDateTimeWithZone,
+		Channel:  "MOBILE",
+	}
+
+	apiResponseBody := APIResponseBody{
+		Header: apiResponseHeader,
+		Data:   persona,
+	}
+
+	apiResponseJSON, _ := json.Marshal(apiResponseBody)
+
+	commons.SendResponse(writer, http.StatusOK, apiResponseJSON)
+
 }
 
 func Save(writer http.ResponseWriter, request *http.Request) {
@@ -89,9 +138,24 @@ func Save(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	json, _ := json.Marshal(persona)
+	// Formatear la fecha y hora con zona horaria
+	formattedDateTimeWithZone := time.Now().Format("2006-01-02 15:04:05 MST")
 
-	commons.SendResponse(writer, http.StatusCreated, json)
+	apiResponseHeader := models.APIResponseHeader{
+		Success:  true,
+		Message:  "Persona Creada Exitosamente",
+		Datetime: formattedDateTimeWithZone,
+		Channel:  "MOBILE",
+	}
+
+	apiResponseBody := APIResponseBody{
+		Header: apiResponseHeader,
+		Data:   persona,
+	}
+
+	apiResponseJSON, _ := json.Marshal(apiResponseBody)
+
+	commons.SendResponse(writer, http.StatusCreated, apiResponseJSON)
 }
 
 func Delete(writer http.ResponseWriter, request *http.Request) {
