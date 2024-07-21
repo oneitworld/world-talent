@@ -78,6 +78,43 @@ func GetAll(writer http.ResponseWriter, request *http.Request) {
 	commons.SendResponse(writer, http.StatusOK, apiResponseJSON)
 
 	fmt.Println(commons.GetIP(request))
+
+	// Auditoria
+	// Leer el cuerpo de la solicitud
+
+	body, err := io.ReadAll(request.Body)
+	if err != nil {
+		return
+	}
+
+	// Convertir el cuerpo a cadena
+	bodyString := string(body)
+
+	// Imprimir el cuerpo de la solicitud
+	fmt.Println("Cuerpo de la solicitud:", bodyString)
+
+	audit := models.Audit{
+		Datetime:     formattedDateTimeWithZone,
+		APIName:      "PERSONA",
+		IPAddress:    string(commons.GetIP(request)),
+		URL:          string(request.URL.Path),
+		HTTPMethod:   string(request.Method),
+		HTTPRequest:  string(bodyString),
+		HTTPResponse: string(apiResponseJSON),
+		Success:      true,
+		Status:       http.StatusOK,
+		Channel:      "MOBILE",
+	}
+	fmt.Println(audit)
+
+	error := db.Save(&audit).Error
+
+	if error != nil {
+		log.Fatal(error)
+		commons.SendError(writer, http.StatusInternalServerError)
+		return
+	}
+
 }
 
 func GetByID(writer http.ResponseWriter, request *http.Request) {

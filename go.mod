@@ -10,4 +10,6 @@ require (
 require (
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/pdfcpu/pdfcpu v0.8.0 // indirect
+	github.com/unidoc/unioffice v1.34.0 // indirect
 )

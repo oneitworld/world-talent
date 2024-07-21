@@ -26,4 +26,5 @@ func Migrate() {
 
 	log.Println("Migrating..")
 	db.AutoMigrate(&models.Persona{})
+	db.AutoMigrate(&models.Audit{})
 }
