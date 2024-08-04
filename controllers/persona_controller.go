@@ -12,12 +12,19 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/oneitworld-demo-crud-api-go/commons"
 	"github.com/oneitworld-demo-crud-api-go/models"
+	"gopkg.in/gomail.v2"
 )
 
 const API_NAME = "PERSONA"
 
 type ServiceStatus struct {
 	DBStatus string
+}
+
+type Email struct {
+	EmailTo string
+	Subject string
+	Content string
 }
 
 type APIResponseBody struct {
@@ -160,6 +167,8 @@ func Save(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
+	go enviarCorreo(persona.Email, "Confirmacion de Registro Persona", "Hola, "+persona.Nombre+"! \nBienvenido a nuestra plataforma de registro de personas! \nONE IT WORLD Team")
+
 	// Formatear la fecha y hora con zona horaria
 	formattedDateTimeWithZone := time.Now().Format("2006-01-02 15:04:05 MST")
 
@@ -179,6 +188,8 @@ func Save(writer http.ResponseWriter, request *http.Request) {
 	apiResponseJSON, _ := json.Marshal(apiResponseBody)
 
 	commons.SendResponse(writer, http.StatusCreated, apiResponseJSON)
+
+	// Enviar correo de confirmacion
 
 	// Escribimos la Auditoria en BD
 	commons.WriteAudit(request, apiResponseJSON, API_NAME, true, http.StatusCreated, "MOBILE")
@@ -256,4 +267,69 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 
 	// Responde al cliente que el archivo se ha subido exitosamente
 	fmt.Fprintf(w, "Archivo subido exitosamente: %s\n", handler.Filename)
+}
+
+func SendEmail(writer http.ResponseWriter, request *http.Request) {
+
+	/*
+		EMAIL_PWD := os.Getenv("EMAIL_PWD")
+		if EMAIL_PWD == "" {
+			panic("EMAIL_PWD no está definida")
+		}
+	*/
+
+	var email Email
+
+	error := json.NewDecoder(request.Body).Decode(&email)
+
+	if error != nil {
+		log.Fatal(error)
+		commons.SendError(writer, http.StatusBadRequest)
+		return
+	}
+	enviarCorreo(email.EmailTo, email.Subject, email.Content)
+	// Configuración del mensaje
+	/*
+		m := gomail.NewMessage()
+		m.SetHeader("From", "mnaranjo@oneitworld.com")
+		m.SetHeader("To", email.EmailTo)
+		m.SetHeader("Subject", "World-Talent-AI: "+email.Subject)
+		m.SetBody("text/plain", email.Content)
+
+		// Configuración del servidor SMTP de Gmail
+		d := gomail.NewDialer("smtp.gmail.com", 587, "mnaranjo@oneitworld.com", "rtqieswmfxsodnhv")
+
+		// Enviar el correo
+		if err := d.DialAndSend(m); err != nil {
+			panic(err)
+		}
+
+	*/
+	fmt.Println("Correo enviado exitosamente!")
+
+	json, _ := json.Marshal(email)
+
+	commons.SendResponse(writer, http.StatusOK, json)
+
+}
+
+func enviarCorreo(emailTo string, subject string, content string) {
+
+	// Configuración del mensaje
+	m := gomail.NewMessage()
+	m.SetHeader("From", "mnaranjo@oneitworld.com")
+	m.SetHeader("To", emailTo)
+	m.SetHeader("Subject", "World-Talent-AI: "+subject)
+	m.SetBody("text/plain", content)
+
+	// Configuración del servidor SMTP de Gmail
+	d := gomail.NewDialer("smtp.gmail.com", 587, "mnaranjo@oneitworld.com", "rtqieswmfxsodnhv")
+
+	// Enviar el correo
+	if err := d.DialAndSend(m); err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Correo enviado exitosamente!")
+
 }

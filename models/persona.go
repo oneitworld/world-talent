@@ -6,4 +6,5 @@ type Persona struct {
 	Apellido  string `json:"apellido"`
 	Direccion string `json:"direccion"`
 	Telefono  string `json:"telefono"`
+	Email     string `json:"email"`
 }

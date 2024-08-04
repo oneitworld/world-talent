@@ -20,6 +20,7 @@ func main() {
 	routes.SetPersonaRoutes(router)
 
 	// Asegúrate de que el directorio uploads exista
+
 	if err := os.MkdirAll("./uploads", os.ModePerm); err != nil {
 		fmt.Println("Error al crear el directorio uploads:", err)
 		return
